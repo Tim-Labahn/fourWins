@@ -1,13 +1,12 @@
 import "./style.css";
 //--------------
-let player = true;
+let player = "R";
 let win = false;
 let gameSize = 7;
 const gameMap: GameMap = [];
 type GameMap = {
   isEmpty: boolean;
-  isPlayerOne: boolean;
-  isPlayerTwo: boolean;
+  player: string;
 }[][];
 //---------------
 createMap();
@@ -21,8 +20,7 @@ function createMap() {
     for (let y = 0; y < gameSize; y++) {
       const tile = {
         isEmpty: true,
-        isPlayerOne: false,
-        isPlayerTwo: false,
+        player: "",
       };
       rowY.push(tile);
     }
@@ -31,10 +29,12 @@ function createMap() {
 }
 
 function game() {
-  render();
+  renderMap();
+
+  changePlayer();
 }
 
-function render() {
+function renderMap() {
   const gameField = document.querySelector(".field");
   if (gameField !== null) {
     gameField.innerHTML = "";
@@ -45,23 +45,40 @@ function render() {
       tile.className = "tile";
       gameField?.appendChild(tile);
       tile.onclick = () => {
-        tileClick(x, y);
+        tileClick(x);
       };
-      if (gameMap[x][y].isEmpty) {
-        if (gameMap[x][y].isPlayerOne) {
-          tile.innerText = "✗";
-        } else if (gameMap[x][y].isPlayerTwo) {
-          tile.innerText = "◯";
+      if (!gameMap[x][y].isEmpty) {
+        if (gameMap[x][y].player === "R") {
+          tile.innerText = "🔴";
+        } else if (gameMap[x][y].player === "B") {
+          tile.innerText = "🔵";
         }
       }
     }
   }
 }
 
-function tileClick(x, y) {
-  //nothing yet
+function tileClick(x: number) {
+  if (gameMap[x][1]?.player === "") {
+    for (let i = 1; i < gameSize; i++) {
+      if (gameMap[x][i]?.player === "") {
+        console.log("ahh");
+      } else {
+        gameMap[x][i].player = player;
+        break;
+      }
+      changePlayer();
+    }
+    renderMap();
+  } else {
+    gameMap[x][gameSize - 1].player = player;
+  }
 }
 
 function changePlayer() {
-  player = !player;
+  if (player === "R") {
+    player = "B";
+  } else {
+    player = "R";
+  }
 }
