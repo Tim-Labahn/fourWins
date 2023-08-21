@@ -1,0 +1,25 @@
+body{
+    display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
+}
+
+.tile{
+    border: 2px solid #000000;
+    width: 100px;
+    height: 100px;
+    background-color: #ffffff;
+    color: #000000;
+    justify-content: center;
+    
+    }
+    
+ .field{
+        justify-content: center;
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        width: 700px;
+ }
+
