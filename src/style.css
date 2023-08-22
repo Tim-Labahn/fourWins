@@ -12,7 +12,7 @@ body{
         display: grid;
         grid-template-columns: repeat(7, 1fr);
         width: 700px;
-        transform: rotate(270deg)
+        transform: rotate(90deg)
  }
 
  .tile{

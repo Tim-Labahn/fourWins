@@ -1,12 +1,12 @@
 import "./style.css";
 //--------------
-let player = "R";
+let player = true;
 let win = false;
 let gameSize = 7;
 const gameMap: GameMap = [];
 type GameMap = {
   isEmpty: boolean;
-  player: string;
+  player: boolean;
 }[][];
 //---------------
 createMap();
@@ -20,7 +20,7 @@ function createMap() {
     for (let y = 0; y < gameSize; y++) {
       const tile = {
         isEmpty: true,
-        player: "",
+        player: false,
       };
       rowY.push(tile);
     }
@@ -30,7 +30,6 @@ function createMap() {
 
 function game() {
   renderMap();
-
   changePlayer();
 }
 
@@ -48,9 +47,9 @@ function renderMap() {
         tileClick(x);
       };
       if (!gameMap[x][y].isEmpty) {
-        if (gameMap[x][y].player === "R") {
+        if (gameMap[x][y].player) {
           tile.innerText = "🔴";
-        } else if (gameMap[x][y].player === "B") {
+        } else {
           tile.innerText = "🔵";
         }
       }
@@ -59,26 +58,26 @@ function renderMap() {
 }
 
 function tileClick(x: number) {
-  if (gameMap[x][1]?.player === "") {
-    for (let i = 1; i < gameSize; i++) {
-      if (gameMap[x][i]?.player === "") {
-        console.log("ahh");
-      } else {
-        gameMap[x][i].player = player;
-        break;
-      }
-      changePlayer();
+  let y = -1;
+  for (let i = gameSize - 1; i >= 0; i--) {
+    console.log("let", i);
+    if (gameMap[x][i].isEmpty) {
+      y = i;
+      console.log("Y.", y);
+      break;
     }
+  }
+
+  changePlayer();
+
+  if (y !== -1) {
+    console.log("if y");
+    gameMap[x][y].player = player;
+    gameMap[x][y].isEmpty = false;
     renderMap();
-  } else {
-    gameMap[x][gameSize - 1].player = player;
   }
 }
 
 function changePlayer() {
-  if (player === "R") {
-    player = "B";
-  } else {
-    player = "R";
-  }
+  player = !player;
 }
