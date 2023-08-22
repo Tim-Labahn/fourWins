@@ -1,7 +1,7 @@
 import "./style.css";
 //--------------
 let player = true;
-let win = false;
+let win = "";
 let gameSize = 7;
 const gameMap: GameMap = [];
 type GameMap = {
@@ -60,24 +60,70 @@ function renderMap() {
 function tileClick(x: number) {
   let y = -1;
   for (let i = gameSize - 1; i >= 0; i--) {
-    console.log("let", i);
     if (gameMap[x][i].isEmpty) {
       y = i;
-      console.log("Y.", y);
       break;
     }
   }
-
   changePlayer();
-
   if (y !== -1) {
-    console.log("if y");
     gameMap[x][y].player = player;
     gameMap[x][y].isEmpty = false;
     renderMap();
   }
+  checkWin();
 }
 
 function changePlayer() {
   player = !player;
+}
+//---------------------------------------------------------------------------------------------------------------------
+function checkWin() {
+  checkHorizontal();
+  checkVertical();
+  checkDiagonalLeftToRight();
+  checkDiagonalRightToLeft();
+  if (win !== "") {
+    console.log("player:", win, "won");
+  }
+}
+
+function checkVertical() {
+  let chips = 0;
+  for (let k = 0; k <= gameSize - 4; k++) {
+    //<check if red has on the left side from up to down to the first 4
+    chips = 0;
+    for (let y = gameSize - 1; y >= 0; y--) {
+      chips = 0;
+      for (let i = gameSize - 1; i >= 0; i--) {
+        if (gameMap[i - k]) {
+          if (gameMap[i - k][y]?.player === player && !gameMap[i][y]?.isEmpty) {
+            chips++;
+            console.log("chips", chips);
+            checkChips(chips);
+          } else {
+            break;
+          }
+        }
+      }
+    }
+    //>
+  }
+}
+
+function checkHorizontal() {}
+
+function checkDiagonalLeftToRight() {}
+
+function checkDiagonalRightToLeft() {}
+
+function checkChips(c: number) {
+  if (c >= 4) {
+    if (player) {
+      win = "1";
+    }
+    if (!player) {
+      win = "2";
+    }
+  }
 }
