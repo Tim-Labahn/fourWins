@@ -1,28 +1,32 @@
-body{
-    display: flex;
+body {
+  display: flex;
   align-items: center;
   flex-direction: column;
   justify-content: center;
   height: 100vh;
 }
 
+.field {
+  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  width: 700px;
+  /* font-size: 10px; */
+  transform: rotate(90deg) scaleY(-1);
+}
 
- .field{
-        justify-content: center;
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        width: 700px;
-        transform: rotate(90deg)
- }
-
- .tile{
-    border: 2px solid #000000;
-    width: 100px;
-    height: 100px;
-    background-color: #ffffff;
-    color: #000000;
-    justify-content: center;
-    font-size: 410%;
-    user-select: none;
-    }
-    
+.tile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  border: 2px solid #000000;
+  box-sizing: border-box;
+  width: 100px;
+  height: 100px;
+  background-color: #ffffff;
+  color: #000000;
+  font-size: 60px;
+  user-select: none;
+  transform: rotate(270deg) scaleY(-1) rotate(180deg);
+}

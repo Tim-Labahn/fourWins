@@ -1,7 +1,7 @@
-import "./style.css";
+import './style.css';
 //--------------
 let player = true;
-let win = "";
+let win = '';
 let gameSize = 7;
 const gameMap: GameMap = [];
 type GameMap = {
@@ -30,30 +30,26 @@ function createMap() {
 
 function game() {
   renderMap();
-  changePlayer();
-  if (win !== "") {
-    return;
-  }
 }
 
 function renderMap() {
-  const gameField = document.querySelector(".field");
+  const gameField = document.querySelector('.field');
   if (gameField !== null) {
-    gameField.innerHTML = "";
+    gameField.innerHTML = '';
   }
   for (let x = 0; x < gameSize; x++) {
     for (let y = 0; y < gameSize; y++) {
-      const tile = document.createElement("div");
-      tile.className = "tile";
+      const tile = document.createElement('div');
+      tile.className = 'tile';
       gameField?.appendChild(tile);
       tile.onclick = () => {
         tileClick(x);
       };
       if (!gameMap[x][y].isEmpty) {
         if (gameMap[x][y].player) {
-          tile.innerText = "🔴";
-        } else {
-          tile.innerText = "🔵";
+          tile.innerText = '🔴';
+        } else if (!gameMap[x][y].player) {
+          tile.innerText = '🔵';
         }
       }
     }
@@ -68,31 +64,36 @@ function tileClick(x: number) {
       break;
     }
   }
-  changePlayer();
   if (y !== -1) {
     gameMap[x][y].player = player;
     gameMap[x][y].isEmpty = false;
     renderMap();
   }
   checkWin();
+  changePlayer();
 }
 
 function changePlayer() {
   player = !player;
+  console.log('changed');
 }
 //---------------------------------------------------------------------------------------------------------------------
 function checkWin() {
   checkHorizontal();
   checkVertical();
-  // checkDiagonalLeftToRight();
-  // checkDiagonalRightToLeft();
-  if (win !== "") {
-    console.log("player:", win, "won");
+  checkDiagonal();
+  if (win !== '') {
+    showWinner();
+    game();
   }
+}
+function showWinner() {
+  console.log('player:', win, 'won');
+  const winText = document.querySelector('.winText') as HTMLDialogElement;
+  winText.showModal();
 }
 
 function checkHorizontal() {
-  console.log("check hori");
   let BChips = 0;
   let RChips = 0;
   for (let y = gameSize - 1; y >= 0; y--) {
@@ -102,13 +103,11 @@ function checkHorizontal() {
       if (gameMap[i][y]?.player && !gameMap[i][y]?.isEmpty) {
         RChips++;
         BChips = 0;
-        console.log((y - 7) * -1, "Rchips", RChips);
         checkChips(RChips);
       }
       if (!gameMap[i][y]?.player && !gameMap[i][y]?.isEmpty) {
         BChips++;
         RChips = 0;
-        console.log((y - 7) * -1, "Bchips", BChips);
         checkChips(BChips);
       }
       if (gameMap[i][y]?.isEmpty) {
@@ -120,7 +119,6 @@ function checkHorizontal() {
 }
 
 function checkVertical() {
-  console.log("check Verti");
   let BChips = 0;
   let RChips = 0;
   for (let x = gameSize - 1; x >= 0; x--) {
@@ -130,13 +128,11 @@ function checkVertical() {
       if (gameMap[x][i]?.player && !gameMap[x][i]?.isEmpty) {
         RChips++;
         BChips = 0;
-        console.log((i - 7) * -1, "Rchips", RChips);
         checkChips(RChips);
       }
       if (!gameMap[x][i]?.player && !gameMap[x][i]?.isEmpty) {
         BChips++;
         RChips = 0;
-        console.log((i - 7) * -1, "Bchips", BChips);
         checkChips(BChips);
       }
       if (gameMap[x][i]?.isEmpty) {
@@ -147,43 +143,46 @@ function checkVertical() {
   }
 }
 
-function checkDiagonalLeftToRight() {
-  console.log("check dia L");
-  let BChips = 0;
-  let RChips = 0;
-  for (let y = gameSize - 1; y >= 0; y--) {
-    BChips = 0;
-    RChips = 0;
-    for (let i = gameSize - 1; i >= 0; i--) {
-      if (gameMap[i][y]?.player && !gameMap[i][y]?.isEmpty) {
-        RChips++;
-        BChips = 0;
-        console.log((y - 7) * -1, "Rchips", RChips);
-        checkChips(RChips);
-      }
-      if (!gameMap[i][y]?.player && !gameMap[i][y]?.isEmpty) {
-        BChips++;
-        RChips = 0;
-        console.log((y - 7) * -1, "Bchips", BChips);
-        checkChips(BChips);
-      }
-      if (gameMap[i][y]?.isEmpty) {
-        BChips = 0;
-        RChips = 0;
+function checkDiagonal() {
+  for (let i = 2; i >= 0; i--) {
+    for (let y = gameSize - 1; y > 0; y--) {
+      for (let x = gameSize - 1; x > 0; x--) {
+        if (
+          gameMap[y][x].player === player &&
+          !gameMap[y][x].isEmpty &&
+          gameMap[y - 1]?.[x - 1]?.player === player &&
+          !gameMap[y - 1]?.[x - 1]?.isEmpty &&
+          gameMap[y - 2]?.[x - 2]?.player === player &&
+          !gameMap[y - 2]?.[x - 2]?.isEmpty &&
+          gameMap[y - 3]?.[x - 3]?.player === player &&
+          !gameMap[y - 3]?.[x - 3]?.isEmpty
+        ) {
+          showWinner();
+        }
+        if (
+          gameMap[y][x].player === player &&
+          !gameMap[y][x].isEmpty &&
+          gameMap[y - 1]?.[x + 1]?.player === player &&
+          !gameMap[y - 1]?.[x + 1]?.isEmpty &&
+          gameMap[y - 2]?.[x + 2]?.player === player &&
+          !gameMap[y - 2]?.[x + 2]?.isEmpty &&
+          gameMap[y - 3]?.[x + 3]?.player === player &&
+          !gameMap[y - 3]?.[x + 3]?.isEmpty
+        ) {
+          showWinner();
+        }
       }
     }
   }
 }
 
-function checkDiagonalRightToLeft() {}
-
 function checkChips(c: number) {
   if (c >= 4) {
     if (player) {
-      win = "1";
+      win = '1';
     }
     if (!player) {
-      win = "2";
+      win = '2';
     }
   }
 }
