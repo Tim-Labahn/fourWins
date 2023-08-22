@@ -23,5 +23,6 @@ body{
     color: #000000;
     justify-content: center;
     font-size: 410%;
+    user-select: none;
     }
     
